@@ -48,4 +48,17 @@ class AuthenticationController extends Controller
             ],400);
         }
     }
+
+    public function removeTokens(Request $request){
+        if($request->key != env('ACCESS_KEY')){
+            return response([
+                'error' => 'Unauthorized request !'
+            ],403);
+        }
+
+        (new CredentialService())->removeTokens();
+        return response([
+            'message' => "Tokens has been removed"
+        ]);
+    }
 }

@@ -34,4 +34,11 @@ class CredentialService
         }
         return $accessToken;
     }
+
+    public function removeTokens(): void
+    {
+        Credential::where([
+            'environment' => config('ebay.sandbox') ? 'sandbox' : 'production'
+        ])->delete();
+    }
 }
