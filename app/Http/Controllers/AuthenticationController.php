@@ -33,6 +33,11 @@ class AuthenticationController extends Controller
     }
 
     public function getAccessToken(Request $request){
+        if($request->key != env('ACCESS_KEY')){
+            return response([
+                'error' => 'Unauthorized request !'
+            ],403);
+        }
         try {
             return response([
                 'access_token' => (new CredentialService())->getAccessToken()
@@ -40,7 +45,7 @@ class AuthenticationController extends Controller
         }catch (Exception|GuzzleException $exception){
             return response([
                 'error' => 'Access token not available !'
-            ]);
+            ],400);
         }
     }
 }
