@@ -14,6 +14,7 @@ class Credential extends Model
         'access_token',
         'app_token',
         'rf_token_valid_till',
-        'access_token_valid_till'
+        'access_token_valid_till',
+        'environment'
     ];
 }

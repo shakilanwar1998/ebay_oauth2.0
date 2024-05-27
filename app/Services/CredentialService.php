@@ -9,7 +9,10 @@ class CredentialService
 {
     public function renewTokens($data): void
     {
-        $credential = Credential::firstOrNew();
+        $data['environment'] = config('ebay.sandbox') ? 'sandbox' : 'production';
+        $credential = Credential::where([
+            'environment' => $data['environment']
+        ])->firstOrNew();
         $credential->fill($data);
         $credential->save();
     }
@@ -19,9 +22,12 @@ class CredentialService
      */
     public function getAccessToken()
     {
-        $credentials = Credential::first();
+        $credentials = Credential::where([
+            'environment' => config('ebay.sandbox') ? 'sandbox' : 'production'
+        ])->first();
+
         $accessToken = $credentials->access_token;
-        if($credentials->access_token_valid_till < now()){
+        if ($credentials->access_token_valid_till < now()) {
             $tokens = app(ApiService::class)->getAccessToken($credentials->refresh_token);
             $accessToken = $tokens['access_token'];
             app(CredentialService::class)->renewTokens($tokens);
