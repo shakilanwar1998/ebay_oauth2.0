@@ -42,7 +42,7 @@ class AuthenticationController extends Controller
             $token = (new CredentialService())->getAccessToken();
             return response([
                 'access_token' => $token['token'],
-                'valid_till' => $token['valid_till']
+                'token_expiration' => $token['valid_till']
             ]);
         }catch (Exception|GuzzleException $exception){
             return response([
