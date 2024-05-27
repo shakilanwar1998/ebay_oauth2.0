@@ -27,12 +27,14 @@ class CredentialService
         ])->first();
 
         $accessToken = $credentials->access_token;
+        $valid_till = $credentials->access_token_valid_till;
         if ($credentials->access_token_valid_till < now()) {
-            $tokens = app(ApiService::class)->getAccessToken($credentials->refresh_token);
+            $tokens = (new ApiService())->getAccessToken($credentials->refresh_token);
             $accessToken = $tokens['access_token'];
-            app(CredentialService::class)->renewTokens($tokens);
+            $valid_till = $tokens['access_token_valid_till'];
+            (new CredentialService())->renewTokens($tokens);
         }
-        return $accessToken;
+        return ['token' => $accessToken, 'valid_till' => $valid_till];
     }
 
     public function removeTokens(): void

@@ -39,8 +39,10 @@ class AuthenticationController extends Controller
             ],403);
         }
         try {
+            $token = (new CredentialService())->getAccessToken();
             return response([
-                'access_token' => (new CredentialService())->getAccessToken()
+                'access_token' => $token['token'],
+                'valid_till' => $token['valid_till']
             ]);
         }catch (Exception|GuzzleException $exception){
             return response([
